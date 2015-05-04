@@ -129,7 +129,10 @@ a) Define  "allTrue" to evaluate a list of expression of Bools to True if all
    'fold'.
    (i.e. Do not have an explicit parameters.  allTrue = ???)  
 
-   
+> allTrue = foldl (&&) True
+
+allTrue [True, True, True] ~> True
+allTrue [True, False, True, True] ~> False
 
 b)  define "noneTrue"  which evaluates to True if none of the boolean 
     expression in a list are true. Provide two test cases.  Your definition 
@@ -139,12 +142,14 @@ b)  define "noneTrue"  which evaluates to True if none of the boolean
     "glue" some of the functions so you don't need explicit parameters.)
     You should use a 'fold'.
     
+> noneTrue = foldl (\x y -> (not y) && x) True
 
-
+noneTrue [True,False,False] ~> False
+noneTrue [False,False,False] ~> True
 
 Problem 5:[10pts] Write new definitions of this function:
 
-> f = \xs -> [ x + 5 | x <- xs, x > -1 ]
+... > f = \xs -> [ x + 5 | x <- xs, x > -1 ]
   
    ...> f [1,20,-3,15,2]
    [6,25,20,7]
@@ -153,13 +158,14 @@ Problem 5:[10pts] Write new definitions of this function:
    using explicit recursion with guards but without pattern-matching.  You
    may use explicit arguments.
    
-
+> f []		= []
+> f (a:ax)	= if a > -1 then (a+5):(f ax) else (f ax)
 
 
 Problem 6:[10pts] (Thompson 10.13)
   Find functions f1 and f2 so that
  
-   s7 =  map f1 . filter f2
+> s7 =  map (+1) . filter (>=0)
 
   has the same effect as
  
@@ -191,7 +197,8 @@ is valid:  (hint: a lambda expressions could be useful).
 _________________________
 Possible Answers: 
 
-
+> f2 a lst		= [a x | x <- lst]
+> f1 fnLst a	= map (\x -> x a) fnLst
 
 
 Problem 8:[10pts]   
@@ -206,13 +213,17 @@ Define 'prodLtoR nums', that given a non empty list of Nums, nums,
             
     ...> prodLtoR [3,4,1,2,3]
     [3,12,12,24,72]
+
+> prodLtoR []			= []
+> prodLtoR [a]			= [a]
+> prodLtoR (a:b:tail)	= a:(prodLtoR (a*b:tail))
     
    B)Redo the above by filling in the blanks below.
    
      > prodLtoRHOF  = (.) reverse (foldl op [] )
      >  where
-     >   op  [] y = ______________
-     >   op  (x:xs) y = ___________
+     >   op  [] y = [y]
+     >   op  (x:xs) y = y*x:xs
 
 
 Problem 9: [10pts]  Haskell has a Functor class.
@@ -236,6 +247,7 @@ For example
 > tree1 = Node 5 (Node 10 Leaf (Node 12 Leaf (Node 15 Leaf Leaf) ) ) Leaf
 > tree2 = Node 5 (Node 10 Leaf (Node 99 Leaf (Node 15 Leaf Leaf) ) ) Leaf
 > tree3 = Node 5 (Node 10 (Node 12 Leaf (Node 15 Leaf Leaf) ) Leaf ) Leaf
+
 
 
 Problem 10: [10pts] (Thompson 17.23 )
